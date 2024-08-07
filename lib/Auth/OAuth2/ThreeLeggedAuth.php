@@ -69,7 +69,7 @@ class ThreeLeggedAuth extends AbstractOAuth2
             'redirect_uri' => $this->configuration->getRedirectUrl(),
         ];
 
-        $response = parent::fetchAccessToken('authentication/v1/gettoken', 'authorization_code', $additionalParams);
+        $response = parent::fetchAccessToken('authentication/v2/token', 'authorization_code', $additionalParams);
 
         $this->saveRefreshToken($response);
     }
@@ -84,7 +84,7 @@ class ThreeLeggedAuth extends AbstractOAuth2
             'refresh_token' => $refreshToken,
         ];
 
-        $response = parent::fetchAccessToken('authentication/v1/refreshtoken', 'refresh_token', $additionalParams);
+        $response = parent::fetchAccessToken('authentication/v2/token', 'refresh_token', $additionalParams);
 
         $this->saveRefreshToken($response);
     }

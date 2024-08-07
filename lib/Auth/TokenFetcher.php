@@ -75,16 +75,21 @@ class TokenFetcher
      */
     public function fetch($url, $grantType, array $scopes, array $additionalParams = [])
     {
+        // client_id and client_secret are now passed as headers
         $formParams = array_merge([
-            'client_id'     => $this->configuration->getClientId(),
-            'client_secret' => $this->configuration->getClientSecret(),
+            //'client_id'     => $this->configuration->getClientId(),
+            //'client_secret' => $this->configuration->getClientSecret(),
             'grant_type'    => $grantType,
             'scope'         => implode(' ', $scopes),
         ], $additionalParams);
 
         $url = "{$this->configuration->getHost()}/{$url}";
 
-        $response = $this->makeRequest($url, $formParams);
+        $headers = [
+            'Authorization' => 'Basic ' . base64_encode($this->configuration->getClientId() .':' . $this->configuration->getClientSecret()),
+        ];
+
+        $response = $this->makeRequest($url, $formParams, $headers);
 
         return json_decode($response, true);
     }
@@ -95,11 +100,11 @@ class TokenFetcher
      * @return string
      * @throws RuntimeException
      */
-    private function makeRequest($url, $body)
+    private function makeRequest($url, $body, array $headers = [])
     {
         try {
             $response = $this->httpClient->post($url, [
-                'headers'     => $this->headersProvider->getHeaders(),
+                'headers'     => array_merge($this->headersProvider->getHeaders(), $headers),
                 'form_params' => $body,
             ]);
         } catch (ClientException $e) {

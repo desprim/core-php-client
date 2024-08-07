@@ -109,7 +109,7 @@ class ThreeLeggedAuthTest extends TestCase
         $this->tokenFetcher
             ->expects($this->once())
             ->method('fetch')
-            ->with('authentication/v1/gettoken', 'authorization_code', [], $additionalParams)
+            ->with('authentication/v2/token', 'authorization_code', [], $additionalParams)
             ->willReturn(['access_token' => $accessToken, 'expires_in' => $expiry, 'refresh_token' => $refreshToken]);
 
         $this->auth->fetchToken($authorizationCode);
@@ -132,7 +132,7 @@ class ThreeLeggedAuthTest extends TestCase
         $this->tokenFetcher
             ->expects($this->once())
             ->method('fetch')
-            ->with('authentication/v1/refreshtoken', 'refresh_token', [], $additionalParams)
+            ->with('authentication/v2/token', 'refresh_token', [], $additionalParams)
             ->willReturn(['access_token' => 'XXXX', 'expires_in' => 100, 'refresh_token' => $refreshToken]);
 
         $this->auth->refreshToken($refreshToken);
